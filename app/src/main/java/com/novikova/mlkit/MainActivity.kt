@@ -1,58 +1,81 @@
 package com.novikova.mlkit
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import pub.devrel.easypermissions.AfterPermissionGranted
-import pub.devrel.easypermissions.EasyPermissions
-
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import com.novikova.mlkit.faceDetection.FaceDetectionActivity
+import com.novikova.mlkit.faceDetection.SimpleFaceDetectionActivity
+import kotlin.reflect.KClass
 
 class MainActivity : AppCompatActivity() {
 
-    companion object{
-        const val CAMERA_PERMISSION_REQUEST_CODE = 123
-    }
+    private val map = mutableMapOf<String, Class<*>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        textView.setOnClickListener {
-            if (hasCameraPermission()) {
-                scanBarcode()
-            } else {
-                getPermission()
-            }
+        initMap()
+
+        findViewById<EditText>(R.id.detection).setOnClickListener {
+            showDetectionDialog()
+        }
+
+        findViewById<Button>(R.id.detect).setOnClickListener {
+            //select image
+            val currentDetection = findViewById<EditText>(R.id.detection).text.toString()
+            val intent = Intent(
+                applicationContext,
+                map[currentDetection]
+            )
+            startActivity(intent)
         }
     }
 
-    private fun getPermission() {
-        EasyPermissions.requestPermissions(this, "Необходим доступ к камере",
-            CAMERA_PERMISSION_REQUEST_CODE, Manifest.permission.CAMERA
+    private fun initMap() {
+        map[getString(R.string.face_detection)] =
+            Class.forName("com.novikova.mlkit.faceDetection.FaceDetectionActivity")
+        map[getString(R.string.object_detection)] =
+            Class.forName("com.novikova.mlkit.objectDetectionAndTracking.ObjectDetectionActivity")
+        map[getString(R.string.pose_detection)] =
+            Class.forName("com.novikova.mlkit.posedetector.PoseDetectionActivity")
+        map[getString(R.string.selfie_segmentation)] =
+            Class.forName("com.novikova.mlkit.selfiesegmentation.SegmentationActivity")
+        map[getString(R.string.text_detection)] =
+            Class.forName("com.novikova.mlkit.textdetector.TextDetectionActivity")
+    }
+
+    private fun showDetectionDialog() {
+        val array = resources.getStringArray(R.array.detection)
+        var detection = getString(R.string.face_detection)
+
+        val builder = createAlertDialog(
+            resources.getString(R.string.choose_detection)
         )
+
+        builder.setPositiveButton(
+            resources.getString(R.string.ok)
+        ){ _, _ ->
+            findViewById<EditText>(R.id.detection).setText(detection)
+        }
+            .setSingleChoiceItems(array, 0) { _, index ->
+                detection = array[index]
+            }
+
+        builder.show()
     }
 
-    private fun hasCameraPermission(): Boolean {
-        return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)
-    }
+    private fun createAlertDialog(
+        title: String
+    ): AlertDialog.Builder =
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setCancelable(true)
+            .setNegativeButton(
+                resources.getString(R.string.cancel)
+            ){ dialog, _ -> dialog.cancel() }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-
-    }
-
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(CAMERA_PERMISSION_REQUEST_CODE)
-    private fun scanBarcode() {
-        startActivity(Intent(this, ScannerBarcodeActivity::class.java))
-    }
 }

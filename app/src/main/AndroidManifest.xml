@@ -2,29 +2,40 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.novikova.mlkit">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/logo_mlkit"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.MLKit">
+
+<!--        If you choose to use the Google Play Service way:
+            you can configure your app to automatically download the model
+            to the device after your app is installed from the Play Store.-->
+
+<!--        <meta-data-->
+<!--            android:name="com.google.mlkit.vision.DEPENDENCIES"-->
+<!--            android:value="face" />-->
+        <!-- To use multiple models: android:value="face,model2,model3" -->
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ScannerBarcodeActivity"
-            android:screenOrientation="portrait"/>
-
-        <meta-data
-            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="barcode" />
+        <activity android:name=".faceDetection.FaceDetectionActivity"/>
+        <activity android:name=".objectDetectionAndTracking.ObjectDetectionActivity"/>
+        <activity android:name=".posedetector.PoseDetectionActivity"/>
+        <activity android:name=".selfiesegmentation.SegmentationActivity"/>
+        <activity android:name=".textdetector.TextDetectionActivity"/>
     </application>
 
 </manifest>

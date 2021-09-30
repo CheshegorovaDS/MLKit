@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">MLKit</string>
+
+    <string-array name="detection">
+        <item>@string/face_detection</item>
+        <item>@string/selfie_segmentation</item>
+        <item>@string/object_detection</item>
+        <item>@string/pose_detection</item>
+        <item>@string/text_detection</item>
+    </string-array>
+    
+    <string name="face_detection">Face Detection</string>
+    <string name="selfie_segmentation">Selfie Segmentation</string>
+    <string name="object_detection">Object Detection</string>
+    <string name="pose_detection">Pose Detection</string>
+    <string name="text_detection">Text Detection</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="choose_detection">Choose Detection:</string>
+    <string name="detect">detect</string>
+
+    <string name="select_picture">Select Picture</string>
 </resources>
