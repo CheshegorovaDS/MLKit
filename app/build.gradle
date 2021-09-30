@@ -1,14 +1,15 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
 
 android {
-    compileSdkVersion 29
+    compileSdk 30
 
     defaultConfig {
         applicationId "com.novikova.mlkit"
-        minSdkVersion 22
-        targetSdkVersion 29
+        minSdk 24
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
@@ -21,31 +22,43 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+//    Face Detection
+    // Use this dependency to bundle the model with your app
+    implementation 'com.google.mlkit:face-detection:16.1.2'
+    // Use this dependency to use dynamically downloaded model in Google Play Service
+//    implementation 'com.google.android.gms:play-services-mlkit-face-detection:16.2.0'
 
-    //MLKit
-//    implementation 'com.google.android.gms:play-services-vision:20.1.2'
-//
-//    implementation 'com.google.firebase:firebase-ml-vision:24.1.0'
-//    implementation 'com.google.firebase:firebase-ml-vision-barcode-model:16.1.2'
-    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:16.1.2'
+//    Object Detection
+    implementation 'com.google.mlkit:object-detection:16.2.6'
 
-    //Permissions
-    implementation 'pub.devrel:easypermissions:3.0.0'
+    // If you want to use the base sdk
+    implementation 'com.google.mlkit:pose-detection:17.0.1-beta5'
+    // If you want to use the accurate sdk
+//    implementation 'com.google.mlkit:pose-detection-accurate:17.0.1-beta5'
 
-    implementation 'com.google.android.material:material:1.2.1'
+//    Selfie Segmentation
+    implementation 'com.google.mlkit:segmentation-selfie:16.0.0-beta2'
 
+//    Text Detection
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:17.0.0'
 
-    // Testing
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.guava:guava:27.1-android'
 
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
